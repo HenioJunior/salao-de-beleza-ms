@@ -1,2 +1,2 @@
-# salao-de-beleza-ms
+## API Salão de beleza
 API para controlar agendamentos de serviços de um salão de beleza
