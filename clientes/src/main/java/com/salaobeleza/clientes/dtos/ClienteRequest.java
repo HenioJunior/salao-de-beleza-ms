@@ -1,12 +1,17 @@
 package com.salaobeleza.clientes.dtos;
 
 import com.salaobeleza.clientes.entites.Cliente;
+import jakarta.validation.constraints.NotBlank;
 
 public class ClienteRequest {
 
+    @NotBlank
     private String nome;
+    @NotBlank
     private String cpf;
+    @NotBlank
     private String email;
+    @NotBlank
     private String telefone;
 
     public ClienteRequest(Cliente cliente) {

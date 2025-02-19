@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "API Salão de Beleza", version = "1", description = "API para controlar o cadastro de clientes"))
+@OpenAPIDefinition(info = @Info(title = "API Salão de Beleza", version = "1", description = "API para cadastro de clientes"))
 public class ClientesApplication {
 
 	public static void main(String[] args) {

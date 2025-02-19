@@ -5,8 +5,9 @@ import com.salaobeleza.clientes.dtos.ClienteRequest;
 import com.salaobeleza.clientes.dtos.ClienteResponse;
 import com.salaobeleza.clientes.entites.Cliente;
 import com.salaobeleza.clientes.repositories.ClienteRepository;
+import com.salaobeleza.clientes.services.exceptions.DatabaseException;
+import com.salaobeleza.clientes.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class ClienteService {
     @Transactional(readOnly = true)
     public ClienteResponse buscaPorId(String id) {
         Cliente cliente = repository.findById(id).orElseThrow(
-                () -> new RuntimeException("Recurso não encontrado"));
+                () -> new ResourceNotFoundException("Recurso não encontrado"));
         return new ClienteResponse(cliente);
     }
 
@@ -40,7 +41,7 @@ public class ClienteService {
 
     public ClienteResponse AtualizaCliente(String id, ClienteRequest request) {
         Cliente cliente = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não localizado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Cliente não localizado"));
         cliente.setNome(request.getNome());
         cliente.setCpf(request.getCpf());
         cliente.setEmail(request.getEmail());
@@ -51,11 +52,11 @@ public class ClienteService {
 
     public void deletaCliente(String id) {
         if(!repository.existsById(id)) {
-            throw new RuntimeException("Recurso não encontrado");
+            throw new ResourceNotFoundException("Recurso não encontrado");
         }
         try {
             repository.deleteById(id);
-        } catch (DataIntegrityViolationException e) {
+        } catch (DatabaseException e) {
             throw new RuntimeException("Falha de integridade referencial");
         }
     }
