@@ -3,7 +3,7 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8081/eureka
+      defaultZone: http://localhost:8761/eureka
     instance:
       preferIpAddress: true
 springdoc:
@@ -18,7 +18,7 @@ springdoc:
     display-request-duration: true
 spring:
   application:
-    name: servicos
+    name: servicos-api
   profiles:
     active: dev
   jpa:
