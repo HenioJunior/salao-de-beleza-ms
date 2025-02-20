@@ -18,7 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/profissionais", produces = {"application/json"})
+@RequestMapping(value = "/v1", produces = {"application/json"})
 @Tag(name = "Profissional")
 public class ProfissionalController {
 

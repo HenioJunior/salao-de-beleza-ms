@@ -19,7 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/clientes", produces = {"application/json"})
+@RequestMapping(value = "/v1", produces = {"application/json"})
 @Tag(name = "Cliente")
 public class ClienteController {
 
