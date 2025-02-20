@@ -21,8 +21,7 @@ public class ClienteRequest {
         this.telefone = cliente.getTelefone();
     }
 
-    public ClienteRequest() {
-    }
+    public ClienteRequest() {}
 
     public String getNome() {
         return nome;
