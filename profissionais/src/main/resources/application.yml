@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
 eureka:
   client:
     serviceUrl:
@@ -18,7 +18,7 @@ springdoc:
     display-request-duration: true
 spring:
   application:
-    name: clientes
+    name: profissionais
   profiles:
     active: dev
   jpa:
