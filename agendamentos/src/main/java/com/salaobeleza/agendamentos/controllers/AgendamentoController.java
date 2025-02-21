@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +56,7 @@ public class AgendamentoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o agendamento")
     })
-    public ResponseEntity<AgendamentoResponse> novaAgendamento(@RequestBody AgendamentoRequest request) {
+    public ResponseEntity<AgendamentoResponse> novaAgendamento(@Valid @RequestBody AgendamentoRequest request) {
         AgendamentoResponse response = service.novoAgendamento(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(response.getId()).toUri();
@@ -70,7 +71,7 @@ public class AgendamentoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o agendamento")
     })
-    public ResponseEntity<AgendamentoResponse> atualizaAgendamento(@PathVariable String id, @RequestBody AgendamentoRequest request) {
+    public ResponseEntity<AgendamentoResponse> atualizaAgendamento(@PathVariable String id, @Valid @RequestBody AgendamentoRequest request) {
         AgendamentoResponse response = service.atualizaAgendamento(id, request);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(id).toUri();
