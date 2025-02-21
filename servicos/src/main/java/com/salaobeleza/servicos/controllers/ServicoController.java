@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,7 +56,7 @@ public class ServicoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
     })
-    public ResponseEntity<ServicoResponse> novoServico(@RequestBody ServicoRequest request) {
+    public ResponseEntity<ServicoResponse> novoServico(@Valid @RequestBody ServicoRequest request) {
         ServicoResponse response = service.novoServico(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(response.getId()).toUri();
@@ -70,7 +71,7 @@ public class ServicoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do servico")
     })
-    public ResponseEntity<ServicoResponse> atualizaServico(@PathVariable String id, @RequestBody ServicoRequest request) {
+    public ResponseEntity<ServicoResponse> atualizaServico(@PathVariable String id, @Valid @RequestBody ServicoRequest request) {
         ServicoResponse response = service.atualizaServico(id, request);
         return ResponseEntity.ok(response);
     }

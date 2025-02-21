@@ -1,10 +1,13 @@
 package com.salaobeleza.servicos.dtos;
 
 import com.salaobeleza.servicos.enums.TipoServico;
+import jakarta.validation.constraints.NotNull;
 
 public class ServicoRequest {
 
+    @NotNull
     private double valor;
+    @NotNull
     private TipoServico tipo;
 
     public ServicoRequest(double valor, TipoServico tipo) {

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +43,7 @@ public class ProfissionalController {
             @ApiResponse(responseCode = "200", description = "ok"),
 
     })
-    public ResponseEntity<Page<ProfissionalResponse>>  findAll(Pageable pageable) {
+    public ResponseEntity<Page<ProfissionalResponse>> findAll(Pageable pageable) {
         Page<ProfissionalResponse> response =  service.buscaTodos(pageable);
         return ResponseEntity.ok(response);
     }
@@ -55,7 +56,7 @@ public class ProfissionalController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
     })
-    public ResponseEntity<ProfissionalResponse> novoprofissional(@RequestBody ProfissionalRequest request) {
+    public ResponseEntity<ProfissionalResponse> novoprofissional(@Valid @RequestBody ProfissionalRequest request) {
         ProfissionalResponse response = service.novoProfissional(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(response.getId()).toUri();
@@ -70,7 +71,7 @@ public class ProfissionalController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do profissional")
     })
-    public ResponseEntity<ProfissionalResponse> atualizaprofissional(@PathVariable String id, @RequestBody ProfissionalRequest request) {
+    public ResponseEntity<ProfissionalResponse> atualizaprofissional(@PathVariable String id, @Valid @RequestBody ProfissionalRequest request) {
         ProfissionalResponse response = service.atualizaProfissional(id, request);
         return ResponseEntity.ok(response);
     }

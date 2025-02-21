@@ -1,11 +1,17 @@
 package com.salaobeleza.profissionais.dtos;
 
 
+import jakarta.validation.constraints.NotBlank;
+
 public class ProfissionalRequest {
 
+    @NotBlank
     private String nome;
+    @NotBlank
     private String cpf;
+    @NotBlank
     private String email;
+    @NotBlank
     private String telefone;
 
     public ProfissionalRequest(String nome, String cpf, String email, String telefone) {
