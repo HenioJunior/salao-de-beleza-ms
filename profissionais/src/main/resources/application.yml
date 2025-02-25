@@ -4,7 +4,7 @@ spring:
   application:
     name: profissional
   profiles:
-    active: dev
+    active: homol
 openapi:
   service:
     title: Profissional API doc

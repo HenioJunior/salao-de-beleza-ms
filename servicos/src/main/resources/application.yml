@@ -4,7 +4,7 @@ spring:
   application:
     name: servico
   profiles:
-    active: dev
+    active: homol
 openapi:
   service:
     title: Servico API doc

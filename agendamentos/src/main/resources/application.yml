@@ -4,7 +4,7 @@ spring:
   application:
     name: agendamento
   profiles:
-    active: dev
+    active: homol
 openapi:
   service:
     title: Agendamento API doc
