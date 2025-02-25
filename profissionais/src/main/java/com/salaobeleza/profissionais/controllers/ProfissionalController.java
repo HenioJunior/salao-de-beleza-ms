@@ -9,44 +9,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping(value = "/v1", produces = {"application/json"})
+@RequestMapping(value = "/api/v1", produces = {"application/json"})
 @Tag(name = "Profissional")
 public class ProfissionalController {
 
     @Autowired
     private ProfissionalService service;
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Realiza a busca de um profissional por id")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Ok"),
-
-    })
-    public ResponseEntity<ProfissionalResponse> findById(@PathVariable String id) {
-        ProfissionalResponse response =  service.buscaPorId(id);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping
-    @Operation(summary = "Realiza a busca de todos os profissionais")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "ok"),
-
-    })
-    public ResponseEntity<Page<ProfissionalResponse>> findAll(Pageable pageable) {
-        Page<ProfissionalResponse> response =  service.buscaTodos(pageable);
-        return ResponseEntity.ok(response);
-    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Realiza o cadastro de um novo profissional")
@@ -56,14 +31,11 @@ public class ProfissionalController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
     })
-    public ResponseEntity<ProfissionalResponse> novoprofissional(@Valid @RequestBody ProfissionalRequest request) {
-        ProfissionalResponse response = service.novoProfissional(request);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(response.getId()).toUri();
-        return ResponseEntity.created(uri).body(response);
+    public ResponseEntity<String> novoProfissional(@Valid @RequestBody ProfissionalRequest request) {
+        return ResponseEntity.ok(service.novoProfissional(request));
     }
 
-    @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping()
     @Operation(summary = "Modifica o cadastro de um profissional existente")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cadastro do profissional atualizado com sucesso"),
@@ -71,9 +43,30 @@ public class ProfissionalController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do profissional")
     })
-    public ResponseEntity<ProfissionalResponse> atualizaprofissional(@PathVariable String id, @Valid @RequestBody ProfissionalRequest request) {
-        ProfissionalResponse response = service.atualizaProfissional(id, request);
+    public ResponseEntity<Void> atualizaProfissional(@Valid @RequestBody ProfissionalRequest request) {
+        service.atualizaProfissional(request);
+        return ResponseEntity.accepted().build();
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Realiza a busca de um profissional por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+
+    })
+    public ResponseEntity<ProfissionalResponse> findById(@PathVariable String id) {
+        ProfissionalResponse  response =  service.buscaPorId(id);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    @Operation(summary = "Realiza a busca de todos os profissionais")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "ok"),
+
+    })
+    public ResponseEntity<List<ProfissionalResponse>>  findAll() {
+        return ResponseEntity.ok(service.buscaTodos());
     }
 
     @DeleteMapping(value = {"/{id}"})
@@ -84,7 +77,7 @@ public class ProfissionalController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao remover o profissional")
     })
-    public ResponseEntity<Void> deletaProfissional(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         service.deletaProfissional(id);
         return ResponseEntity.noContent().build();
     }

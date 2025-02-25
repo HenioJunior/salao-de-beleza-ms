@@ -1,13 +1,22 @@
 package com.salaobeleza.agendamentos.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Valid
 public class AgendamentoRequest {
 
+    private String id;
     @JsonFormat(pattern = "dd-MM-yyyy@HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @NotNull
     private LocalDateTime horario;
@@ -18,28 +27,4 @@ public class AgendamentoRequest {
     @NotBlank
     private String servicoId;
 
-    public AgendamentoRequest() {}
-
-    public AgendamentoRequest(LocalDateTime horario, String clienteId, String profissionalId, String servicoId) {
-        this.horario = horario;
-        this.clienteId = clienteId;
-        this.profissionalId = profissionalId;
-        this.servicoId = servicoId;
-    }
-
-    public LocalDateTime getHorario() {
-        return horario;
-    }
-
-    public String getClienteId() {
-        return clienteId;
-    }
-
-    public String getProfissionalId() {
-        return profissionalId;
-    }
-
-    public String getServicoId() {
-        return servicoId;
-    }
 }

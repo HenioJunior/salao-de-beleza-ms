@@ -1,10 +1,18 @@
 package com.salaobeleza.clientes.dtos;
 
-import com.salaobeleza.clientes.entites.Cliente;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Valid
 public class ClienteRequest {
 
+    private String id;
     @NotBlank
     private String nome;
     @NotBlank
@@ -13,29 +21,4 @@ public class ClienteRequest {
     private String email;
     @NotBlank
     private String telefone;
-
-    public ClienteRequest(Cliente cliente) {
-        this.nome = cliente.getNome();
-        this.cpf = cliente.getCpf();
-        this.email = cliente.getEmail();
-        this.telefone = cliente.getTelefone();
-    }
-
-    public ClienteRequest() {}
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
 }
