@@ -4,7 +4,7 @@ spring:
   application:
     name: produtos-api
   profiles:
-    active: dev
+    active: homol
 openapi:
   service:
     title: produtos-api doc
