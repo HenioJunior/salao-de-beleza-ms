@@ -1,0 +1,25 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: profissionais-api
+  profiles:
+    active: dev
+openapi:
+  service:
+    title: profissionais-api doc
+    version: 1.0.0
+    url: http://localhost:8080
+springdoc:
+  api-docs:
+    path: /profissionais-api/v3/api-docs
+  swagger-ui:
+    path: /profissionais-api/swagger-ui.html
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    instance:
+      preferIpAddress: true
+
+

@@ -1,0 +1,26 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: servicos-api
+  profiles:
+    active: dev
+openapi:
+  service:
+    title: servicos-api doc
+    version: 1.0.0
+    url: http://localhost:8080
+springdoc:
+  api-docs:
+    path: /servicos-api/v3/api-docs
+  swagger-ui:
+    path: /servicos-api/swagger-ui.html
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    instance:
+      preferIpAddress: true
+
+
+

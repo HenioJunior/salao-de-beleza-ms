@@ -1,0 +1,25 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: produtos-api
+  profiles:
+    active: dev
+openapi:
+  service:
+    title: produtos-api doc
+    version: 1.0.0
+    url: http://localhost:8080
+springdoc:
+  api-docs:
+    path: /produtos-api/v3/api-docs
+  swagger-ui:
+    path: /produtos-api/swagger-ui.html
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+    instance:
+      preferIpAddress: true
+
+
