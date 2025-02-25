@@ -9,22 +9,44 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping(value = "/v1", produces = {"application/json"})
+@RequestMapping(value = "/api/v1", produces = {"application/json"})
 @Tag(name = "Agendamento de Serviços")
 public class AgendamentoController {
 
     @Autowired
     private AgendamentoService service;
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Realiza o cadastro de um novo agendamento")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Agendamento cadastrado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
+    })
+    public ResponseEntity<String> novoAgendamento(@Valid @RequestBody AgendamentoRequest request) {
+        return ResponseEntity.ok(service.novoAgendamento(request));
+    }
+
+    @PutMapping()
+    @Operation(summary = "Modifica o cadastro de um agendamento existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cadastro do agendamento atualizado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do srofissional")
+    })
+    public ResponseEntity<Void> atualizaAgendamento(@Valid @RequestBody AgendamentoRequest request) {
+        service.atualizaAgendamento(request);
+        return ResponseEntity.accepted().build();
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Realiza a busca de um agendamento por id")
@@ -33,49 +55,18 @@ public class AgendamentoController {
 
     })
     public ResponseEntity<AgendamentoResponse> findById(@PathVariable String id) {
-        AgendamentoResponse response =  service.buscaPorId(id);
+        AgendamentoResponse  response =  service.buscaPorId(id);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
-    @Operation(summary = "Realiza a busca de todos os agendamentos")
+    @Operation(summary = "Realiza a busca de todos os profissionais")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "ok"),
 
     })
-    public ResponseEntity<Page<AgendamentoResponse>>  findAll(Pageable pageable) {
-        Page<AgendamentoResponse> response =  service.buscaTodos(pageable);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Realiza um novo agendamento de serviço")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Agendamento realizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar o agendamento")
-    })
-    public ResponseEntity<AgendamentoResponse> novaAgendamento(@Valid @RequestBody AgendamentoRequest request) {
-        AgendamentoResponse response = service.novoAgendamento(request);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(response.getId()).toUri();
-        return ResponseEntity.created(uri).body(response);
-    }
-
-    @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Modifica um agendamento existente")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Agendamento atualizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
-            @ApiResponse(responseCode = "500", description = "Erro ao atualizar o agendamento")
-    })
-    public ResponseEntity<AgendamentoResponse> atualizaAgendamento(@PathVariable String id, @Valid @RequestBody AgendamentoRequest request) {
-        AgendamentoResponse response = service.atualizaAgendamento(id, request);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(id).toUri();
-        return ResponseEntity.created(uri).body(response);
+    public ResponseEntity<List<AgendamentoResponse>>  findAll() {
+        return ResponseEntity.ok(service.buscaTodos());
     }
 
     @DeleteMapping(value = {"/{id}"})
@@ -86,9 +77,10 @@ public class AgendamentoController {
             @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
             @ApiResponse(responseCode = "500", description = "Erro ao remover o agendamento")
     })
-    public ResponseEntity<Void> deletaAgendamento(@PathVariable String id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         service.deletaAgendamento(id);
         return ResponseEntity.noContent().build();
     }
+
 
 }

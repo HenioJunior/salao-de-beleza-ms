@@ -2,19 +2,19 @@ server:
   port: 8082
 spring:
   application:
-    name: agendamentos-api
+    name: agendamento
   profiles:
     active: homol
 openapi:
   service:
-    title: agendamentos-api doc
+    title: Agendamento API doc
     version: 1.0.0
     url: http://localhost:8080
 springdoc:
   api-docs:
-    path: /agendamentos-api/v3/api-docs
+    path: /agendamento/v3/api-docs
   swagger-ui:
-    path: /agendamentos-api/swagger-ui.html
+    path: /agendamento/swagger-ui.html
 eureka:
   client:
     serviceUrl:

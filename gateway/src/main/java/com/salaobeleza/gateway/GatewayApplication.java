@@ -23,11 +23,11 @@ public class GatewayApplication {
 	public RouteLocator routeLocator(RouteLocatorBuilder builder) {
 		return builder
 				.routes()
-				.route(r -> r.path("/clientes-api/v3/api-docs").and().method(HttpMethod.GET).uri("lb://clientes-api"))
-				.route(r -> r.path("/profissionais-api/v3/api-docs").and().method(HttpMethod.GET).uri("lb://profissionais-api"))
-				.route(r -> r.path("/servicos-api/v3/api-docs").and().method(HttpMethod.GET).uri("lb://servicos-api"))
-				.route(r -> r.path("/agendamentos-api/v3/api-docs").and().method(HttpMethod.GET).uri("lb://agendamentos-api"))
-				.route(r -> r.path("/produtos-api/v3/api-docs").and().method(HttpMethod.GET).uri("lb://produtos-api"))
+				.route(r -> r.path("/cliente/v3/api-docs").and().method(HttpMethod.GET).uri("lb://cliente"))
+				.route(r -> r.path("/profissional/v3/api-docs").and().method(HttpMethod.GET).uri("lb://profissional"))
+				.route(r -> r.path("/servico/v3/api-docs").and().method(HttpMethod.GET).uri("lb://servico"))
+				.route(r -> r.path("/agendamento/v3/api-docs").and().method(HttpMethod.GET).uri("lb://agendamento"))
+				.route(r -> r.path("/produto/v3/api-docs").and().method(HttpMethod.GET).uri("lb://produto"))
 				.build();
 	}
 }

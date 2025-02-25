@@ -11,34 +11,34 @@ spring:
         connect-timeout: 20000
         response-timeout: 7s
       routes:
-        - id: clientes-api
-          uri: lb://clientes-api
+        - id: cliente
+          uri: lb://cliente
           predicates:
-            - Path=/clientes/** , /clientes-api/v3/api-docs
+            - Path=/cliente/** , /cliente/v3/api-docs
           filters:
             - StripPrefix=1
-        - id: profissionais-api
-          uri: lb://profissionais-api
+        - id: profissional
+          uri: lb://profissional
           predicates:
-            - Path=/profissionais/** , /profissionais-api/v3/api-docs
+            - Path=/profissional/** , /profissional/v3/api-docs
           filters:
             - StripPrefix=1
-        - id: servicos-api
-          uri: lb://servicos-api
+        - id: servico
+          uri: lb://servico
           predicates:
-            - Path=/servicos/** , /servicos-api/v3/api-docs
+            - Path=/servico/** , /servico/v3/api-docs
           filters:
             - StripPrefix=1
-        - id: agendamentos-api
-          uri: lb://agendamentos-api
+        - id: agendamento
+          uri: lb://agendamento
           predicates:
-            - Path=/agendamentos/** , /agendamentos-api/v3/api-docs
+            - Path=/agendamento/** , /agendamento/v3/api-docs
           filters:
             - StripPrefix=1
-        - id: produtos-api
-          uri: lb://produtos-api
+        - id: produto
+          uri: lb://produto
           predicates:
-            - Path=/produtos/** , /produtos-api/v3/api-docs
+            - Path=/produto/** , /produto/v3/api-docs
           filters:
             - StripPrefix=1
 
@@ -53,15 +53,15 @@ springdoc:
     urls:
       - url: /v3/api-docs
         name: API Gateway Service
-      - url: /clientes-api/v3/api-docs
+      - url: /cliente/v3/api-docs
         name: Clientes API
-      - url: /profissionais-api/v3/api-docs
+      - url: /profissional/v3/api-docs
         name: Profissionais API
-      - url: /servicos-api/v3/api-docs
+      - url: /servico/v3/api-docs
         name: Servicos API
-      - url: /agendamentos-api/v3/api-docs
+      - url: /agendamento/v3/api-docs
         name: Agendamentos API
-      - url: /produtos-api/v3/api-docs
+      - url: /produto/v3/api-docs
         name: Produtos API
 eureka:
   client.service-url.defaultZone: http://localhost:8761/eureka

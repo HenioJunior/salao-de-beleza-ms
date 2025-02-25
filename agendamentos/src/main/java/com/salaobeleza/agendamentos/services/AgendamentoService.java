@@ -5,7 +5,10 @@ import com.salaobeleza.agendamentos.entities.Agendamento;
 import com.salaobeleza.agendamentos.http.ApiCliente;
 import com.salaobeleza.agendamentos.http.ApiProfissional;
 import com.salaobeleza.agendamentos.http.ApiServico;
+import com.salaobeleza.agendamentos.mapper.AgendamentoMapper;
 import com.salaobeleza.agendamentos.repositories.AgendamentoRepository;
+import com.salaobeleza.agendamentos.services.exceptions.ResourceNotFoundException;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -13,62 +16,65 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AgendamentoService {
 
     @Autowired
-    private AgendamentoRepository agendamentoRepository;
+    private AgendamentoRepository repository;
 
     @Autowired
-    private ApiCliente apiCliente;
+    private AgendamentoMapper mapper;
 
-    @Autowired
-    private ApiProfissional apiProfissional;
+    public String novoAgendamento(AgendamentoRequest request) {
+        var agendamento = repository.save(mapper.toAgendamento(request));
+        return agendamento.getId();
+    }
 
-    @Autowired
-    private ApiServico apiServico;
+    public void atualizaAgendamento(AgendamentoRequest request) {
+        var agendamento = repository.findById(request.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Agendamento com id '%s' não encontrado", request.getId())));
+        mergeAgendamento(agendamento, request);
+        repository.save(agendamento);
+    }
+
+    private void mergeAgendamento(Agendamento agendamento, AgendamentoRequest request) {
+        if(StringUtils.isNotBlank(request.getClienteId())) {
+            agendamento.setClienteId(request.getClienteId());
+        }
+        if(StringUtils.isNotBlank(request.getProfissionalId())) {
+            agendamento.setProfissionalId(request.getProfissionalId());
+        }
+        if(StringUtils.isNotBlank(request.getServicoId())) {
+            agendamento.setServicoId(request.getServicoId());
+        }
+    }
 
     @Transactional(readOnly = true)
     public AgendamentoResponse buscaPorId(String id) {
-        Agendamento agendamento = agendamentoRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Recurso não encontrado"));
-        return new AgendamentoResponse(agendamento);
+        return repository.findById(id)
+                .map(mapper::toAgendamentoResponse)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Agendamento com id '%s' não encontrado", id)));
     }
 
     @Transactional(readOnly = true)
-    public Page<AgendamentoResponse> buscaTodos(Pageable pageable) {
-        Page<Agendamento> result = agendamentoRepository.findAll(pageable);
-        return result.map(AgendamentoResponse::new);
-    }
-
-    public AgendamentoResponse novoAgendamento(AgendamentoRequest request) {
-        ClienteResponse clienteResponse = apiCliente.getCliente(request.getClienteId());
-        ProfissionalResponse profissionalResponse = apiProfissional.getProfissional(request.getProfissionalId());
-        ServicoResponse servicoResponse = apiServico.getServico(request.getServicoId());
-
-        Agendamento agendamento = new Agendamento(request.getHorario(), clienteResponse, profissionalResponse, servicoResponse);
-        agendamentoRepository.save(agendamento);
-        return new AgendamentoResponse(agendamento);
-
-    }
-
-    public AgendamentoResponse atualizaAgendamento(String id, AgendamentoRequest request) {
-        Agendamento agendamento = agendamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agendamento não localizado"));
-        agendamento.setHorario(request.getHorario());
-        agendamento.setClienteResponse(apiCliente.getCliente(request.getClienteId()));
-        agendamento.setProfissionalResponse(apiProfissional.getProfissional(request.getProfissionalId()));
-        agendamento.setServicoResponse(apiServico.getServico(request.getServicoId()));
-        agendamentoRepository.save(agendamento);
-        return new AgendamentoResponse(agendamento);
+    public List<AgendamentoResponse> buscaTodos() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toAgendamentoResponse)
+                .collect(Collectors.toList());
     }
 
     public void deletaAgendamento(String id) {
-        if(!agendamentoRepository.existsById(id)) {
+        if(!repository.existsById(id)) {
             throw new RuntimeException("Recurso não encontrado");
         }
         try {
-            agendamentoRepository.deleteById(id);
+            repository.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new RuntimeException("Falha de integridade referencial");
         }

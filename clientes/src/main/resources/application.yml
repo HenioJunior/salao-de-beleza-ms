@@ -2,20 +2,20 @@ server:
   port: 8083
 spring:
   application:
-    name: clientes-api
+    name: cliente
   profiles:
     active: homol
 openapi:
   service:
-    title: clientes-api doc
+    title: cliente doc
     version: 1.0.0
     url: http://localhost:8080
 
 springdoc:
   api-docs:
-    path: /clientes-api/v3/api-docs
+    path: /cliente/v3/api-docs
   swagger-ui:
-    path: /clientes-api/swagger-ui.html
+    path: /cliente/swagger-ui.html
 eureka:
   client:
     serviceUrl:

@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient("profissionais-api")
+@FeignClient("profissional")
 public interface ApiProfissional {
-    @RequestMapping(method = RequestMethod.GET, value = "/v1/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/{id}")
     ProfissionalResponse getProfissional(@PathVariable String id);
 }

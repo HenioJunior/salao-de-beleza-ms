@@ -3,13 +3,17 @@ package com.salaobeleza.servicos.services;
 import com.salaobeleza.servicos.dtos.ServicoRequest;
 import com.salaobeleza.servicos.dtos.ServicoResponse;
 import com.salaobeleza.servicos.entities.Servico;
+import com.salaobeleza.servicos.mapper.ServicoMapper;
 import com.salaobeleza.servicos.repositories.ServicoRepository;
+import com.salaobeleza.servicos.services.exceptions.ResourceNotFoundException;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ServicoService {
@@ -17,33 +21,48 @@ public class ServicoService {
     @Autowired
     private ServicoRepository repository;
 
+
+    @Autowired
+    private ServicoMapper mapper;
+
+    public String novoServico(ServicoRequest request) {
+        var servico = repository.save(mapper.toServico(request));
+        return servico.getId();
+    }
+
+    public void atualizaServico(ServicoRequest request) {
+        var servico = repository.findById(request.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Servico com id '%s' não encontrado", request.getId())));
+        mergeServico(servico, request);
+        repository.save(servico);
+    }
+
+    private void mergeServico(Servico servico, ServicoRequest request) {
+        if(StringUtils.isNotBlank(request.getTipo().toString())) {
+            servico.setTipo(request.getTipo());
+        }
+        if(request.getValor() != 0) {
+            servico.setValor(request.getValor());
+        }
+    }
+
     @Transactional(readOnly = true)
     public ServicoResponse buscaPorId(String id) {
-        Servico servico = repository.findById(id).orElseThrow(
-                () -> new RuntimeException("Recurso não encontrado"));
-        return new ServicoResponse(servico);
+        return repository.findById(id)
+                .map(mapper::toServicoResponse)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Servico com id '%s' não encontrado", id)));
     }
 
     @Transactional(readOnly = true)
-    public Page<ServicoResponse> buscaTodos(Pageable pageable) {
-        Page<Servico> result = repository.findAll(pageable);
-        return result.map(ServicoResponse::new);
+    public List<ServicoResponse> buscaTodos() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toServicoResponse)
+                .collect(Collectors.toList());
     }
 
-    public ServicoResponse novoServico(ServicoRequest request) {
-        Servico servico = new Servico(request.getValor(), request.getTipo());
-        repository.save(servico);
-        return new ServicoResponse(servico);
-    }
-
-    public ServicoResponse atualizaServico(String id, ServicoRequest request) {
-        Servico servico = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servico não localizado"));
-        servico.setValor(request.getValor());
-        servico.setTipo(request.getTipo());
-        repository.save(servico);
-        return new ServicoResponse(servico);
-    }
 
     public void deletaServico(String id) {
         if(!repository.existsById(id)) {
