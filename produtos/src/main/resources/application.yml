@@ -2,19 +2,19 @@ server:
   port: 8081
 spring:
   application:
-    name: produtos-api
+    name: produto
   profiles:
     active: homol
 openapi:
   service:
-    title: produtos-api doc
+    title: Produto API doc
     version: 1.0.0
     url: http://localhost:8080
 springdoc:
   api-docs:
-    path: /produtos-api/v3/api-docs
+    path: /produto/v3/api-docs
   swagger-ui:
-    path: /produtos-api/swagger-ui.html
+    path: /produto/swagger-ui.html
 eureka:
   client:
     serviceUrl:

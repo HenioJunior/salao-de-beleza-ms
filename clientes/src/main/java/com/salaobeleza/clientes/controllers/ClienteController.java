@@ -17,14 +17,40 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
-@RequestMapping(value = "/v1", produces = {"application/json"})
+@RequestMapping(value = "/api/v1", produces = {"application/json"})
 @Tag(name = "Cliente")
 public class ClienteController {
 
     @Autowired
     private ClienteService service;
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Realiza o cadastro de um novo cliente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cliente cadastrado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
+    })
+    public ResponseEntity<String> novoCliente(@Valid @RequestBody ClienteRequest request) {
+        return ResponseEntity.ok(service.novoCliente(request));
+    }
+
+    @PutMapping()
+    @Operation(summary = "Modifica o cadastro de um cliente existente")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Cadastro do cliente atualizado com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do cliente")
+    })
+    public ResponseEntity<Void> atualizaCliente(@Valid @RequestBody ClienteRequest request) {
+        service.atualizaCliente(request);
+        return ResponseEntity.accepted().build();
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Realiza a busca de um cliente por id")
@@ -43,37 +69,8 @@ public class ClienteController {
             @ApiResponse(responseCode = "200", description = "ok"),
 
     })
-    public ResponseEntity<Page<ClienteResponse>>  findAll(Pageable pageable) {
-        Page<ClienteResponse> response =  service.buscaTodos(pageable);
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Realiza o cadastro de um novo cliente")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cliente cadastrado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
-            @ApiResponse(responseCode = "500", description = "Erro ao realizar o cadastro")
-    })
-    public ResponseEntity<ClienteResponse> novoCliente(@Valid @RequestBody ClienteRequest request) {
-        ClienteResponse response = service.novoCliente(request);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(response.getId()).toUri();
-        return ResponseEntity.created(uri).body(response);
-    }
-
-    @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Modifica o cadastro de um cliente existente")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cadastro do cliente atualizado com sucesso"),
-            @ApiResponse(responseCode = "422", description = "Dados inválidos"),
-            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
-            @ApiResponse(responseCode = "500", description = "Erro ao atualizar o cadastro do cliente")
-    })
-    public ResponseEntity<ClienteResponse> atualizaCliente(@PathVariable String id, @Valid @RequestBody ClienteRequest request) {
-        ClienteResponse response = service.AtualizaCliente(id, request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<List<ClienteResponse>>  findAll() {
+        return ResponseEntity.ok(service.buscaTodos());
     }
 
     @DeleteMapping(value = {"/{id}"})

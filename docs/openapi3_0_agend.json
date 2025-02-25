@@ -1,0 +1,243 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API Salão de Beleza",
+    "description": "API para agendamento de serviços",
+    "version": "1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/api/v1": {
+      "get": {
+        "tags": [
+          "Agendamento de Serviços"
+        ],
+        "summary": "Realiza a busca de todos os profissionais",
+        "operationId": "findAll",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AgendamentoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Agendamento de Serviços"
+        ],
+        "summary": "Modifica o cadastro de um agendamento existente",
+        "operationId": "atualizaAgendamento",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgendamentoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Cadastro do agendamento atualizado com sucesso"
+          },
+          "400": {
+            "description": "Parâmetros inválidos"
+          },
+          "422": {
+            "description": "Dados inválidos"
+          },
+          "500": {
+            "description": "Erro ao atualizar o cadastro do srofissional"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Agendamento de Serviços"
+        ],
+        "summary": "Realiza o cadastro de um novo agendamento",
+        "operationId": "novoAgendamento",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgendamentoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Agendamento cadastrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao realizar o cadastro",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}": {
+      "get": {
+        "tags": [
+          "Agendamento de Serviços"
+        ],
+        "summary": "Realiza a busca de um agendamento por id",
+        "operationId": "findById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgendamentoResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Agendamento de Serviços"
+        ],
+        "summary": "Remove um agendamento existente",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Agendamento removido com sucesso"
+          },
+          "400": {
+            "description": "Parâmetros inválidos"
+          },
+          "422": {
+            "description": "Dados inválidos"
+          },
+          "500": {
+            "description": "Erro ao remover o agendamento"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AgendamentoRequest": {
+        "required": [
+          "clienteId",
+          "horario",
+          "profissionalId",
+          "servicoId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "horario": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "clienteId": {
+            "type": "string"
+          },
+          "profissionalId": {
+            "type": "string"
+          },
+          "servicoId": {
+            "type": "string"
+          }
+        }
+      },
+      "AgendamentoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "horario": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "clienteId": {
+            "type": "string"
+          },
+          "profissionalId": {
+            "type": "string"
+          },
+          "servicoId": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

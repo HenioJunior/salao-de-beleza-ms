@@ -1,0 +1,239 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "API Salão de Beleza",
+    "description": "API para cadastro de serviços",
+    "version": "1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080"
+    }
+  ],
+  "paths": {
+    "/api/v1": {
+      "get": {
+        "tags": [
+          "Serviço"
+        ],
+        "summary": "Realiza a busca de todos os profissionais",
+        "operationId": "findAll",
+        "responses": {
+          "200": {
+            "description": "ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServicoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Serviço"
+        ],
+        "summary": "Modifica o cadastro de um servico existente",
+        "operationId": "atualizaServico",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServicoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Cadastro do servico atualizado com sucesso"
+          },
+          "400": {
+            "description": "Parâmetros inválidos"
+          },
+          "422": {
+            "description": "Dados inválidos"
+          },
+          "500": {
+            "description": "Erro ao atualizar o cadastro do srofissional"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Serviço"
+        ],
+        "summary": "Realiza o cadastro de um novo servico",
+        "operationId": "novoServico",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServicoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Servico cadastrado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parâmetros inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Dados inválidos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro ao realizar o cadastro",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/{id}": {
+      "get": {
+        "tags": [
+          "Serviço"
+        ],
+        "summary": "Realiza a busca de um servico por id",
+        "operationId": "findById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServicoResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Serviço"
+        ],
+        "summary": "Remove um servico existente",
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Servico removido com sucesso"
+          },
+          "400": {
+            "description": "Parâmetros inválidos"
+          },
+          "422": {
+            "description": "Dados inválidos"
+          },
+          "500": {
+            "description": "Erro ao remover o servico"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ServicoRequest": {
+        "required": [
+          "tipo",
+          "valor"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "valor": {
+            "type": "number",
+            "format": "double"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "CORTE_CABELO",
+              "MANICURE",
+              "DEPILACAO"
+            ]
+          }
+        }
+      },
+      "ServicoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "valor": {
+            "type": "number",
+            "format": "double"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "CORTE_CABELO",
+              "MANICURE",
+              "DEPILACAO"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

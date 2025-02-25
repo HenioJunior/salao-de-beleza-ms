@@ -3,13 +3,17 @@ package com.salaobeleza.profissionais.services;
 import com.salaobeleza.profissionais.dtos.ProfissionalRequest;
 import com.salaobeleza.profissionais.dtos.ProfissionalResponse;
 import com.salaobeleza.profissionais.entities.Profissional;
+import com.salaobeleza.profissionais.mapper.ProfissionalMapper;
 import com.salaobeleza.profissionais.repositories.ProfissionalRepository;
+import com.salaobeleza.profissionais.services.exceptions.ResourceNotFoundException;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfissionalService {
@@ -17,35 +21,51 @@ public class ProfissionalService {
     @Autowired
     private ProfissionalRepository repository;
 
+    @Autowired
+    private ProfissionalMapper mapper;
+
+    public String novoProfissional(ProfissionalRequest request) {
+        var profissional = repository.save(mapper.toProfissional(request));
+        return profissional.getId();
+    }
+
+    public void atualizaProfissional(ProfissionalRequest request) {
+        var profissional = repository.findById(request.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Profissional com id '%s' não encontrado", request.getId())));
+        mergeProfissional(profissional, request);
+        repository.save(profissional);
+    }
+
+    private void mergeProfissional(Profissional profissional, ProfissionalRequest request) {
+        if(StringUtils.isNotBlank(request.getNome())) {
+            profissional.setNome(request.getNome());
+        }
+        if(StringUtils.isNotBlank(request.getCpf())) {
+            profissional.setCpf(request.getCpf());
+        }
+        if(StringUtils.isNotBlank(request.getEmail())) {
+            profissional.setEmail(request.getEmail());
+        }
+        if(StringUtils.isNotBlank(request.getTelefone())) {
+            profissional.setTelefone(request.getTelefone());
+        }
+    }
+
     @Transactional(readOnly = true)
     public ProfissionalResponse buscaPorId(String id) {
-        Profissional profissional = repository.findById(id).orElseThrow(
-                () -> new RuntimeException("Recurso não encontrado"));
-        return new ProfissionalResponse(profissional);
+        return repository.findById(id)
+                .map(mapper::toProfissionalResponse)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Profissional com id '%s' não encontrado", id)));
     }
 
     @Transactional(readOnly = true)
-    public Page<ProfissionalResponse> buscaTodos(Pageable pageable) {
-        Page<Profissional> result = repository.findAll(pageable);
-        return result.map(ProfissionalResponse::new);
-    }
-
-    public ProfissionalResponse novoProfissional(ProfissionalRequest request) {
-        Profissional profissional = new Profissional(request.getNome(), request.getCpf(),
-                request.getEmail(), request.getTelefone());
-        repository.save(profissional);
-        return new ProfissionalResponse(profissional);
-    }
-
-    public ProfissionalResponse atualizaProfissional(String id, ProfissionalRequest request) {
-        Profissional profissional = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Profissional não localizado"));
-        profissional.setNome(request.getNome());
-        profissional.setCpf(request.getCpf());
-        profissional.setEmail(request.getEmail());
-        profissional.setTelefone(request.getTelefone());
-        repository.save(profissional);
-        return new ProfissionalResponse(profissional);
+    public List<ProfissionalResponse> buscaTodos() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toProfissionalResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional

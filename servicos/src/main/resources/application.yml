@@ -2,19 +2,19 @@ server:
   port: 8085
 spring:
   application:
-    name: servicos-api
+    name: servico
   profiles:
     active: homol
 openapi:
   service:
-    title: servicos-api doc
+    title: Servico API doc
     version: 1.0.0
     url: http://localhost:8080
 springdoc:
   api-docs:
-    path: /servicos-api/v3/api-docs
+    path: /servico/v3/api-docs
   swagger-ui:
-    path: /servicos-api/swagger-ui.html
+    path: /servico/swagger-ui.html
 eureka:
   client:
     serviceUrl:
