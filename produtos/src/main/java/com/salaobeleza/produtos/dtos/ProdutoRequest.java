@@ -8,18 +8,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Valid
-public class ProdutoRequest {
+import java.math.BigDecimal;
 
-    private String id;
-    @NotBlank
-    private String nome;
-    @NotBlank
-    private String descricao;
-    @NotBlank
-    private String marca;
-    private TipoProduto tipo;
-}
+public record ProdutoRequest(
+        String id,
+        @NotBlank
+        String nome,
+        @NotBlank
+        String descricao,
+        @NotBlank
+        String marca,
+        TipoProduto tipo,
+        double quantidade,
+        BigDecimal preco
+)
+{ }

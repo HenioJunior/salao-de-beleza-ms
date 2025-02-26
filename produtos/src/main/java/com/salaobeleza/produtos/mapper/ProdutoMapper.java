@@ -1,8 +1,10 @@
 package com.salaobeleza.produtos.mapper;
 
+import com.salaobeleza.produtos.dtos.FechamentoCompraResponse;
 import com.salaobeleza.produtos.dtos.ProdutoRequest;
 import com.salaobeleza.produtos.dtos.ProdutoResponse;
 import com.salaobeleza.produtos.entities.Produto;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,10 +12,12 @@ public class ProdutoMapper {
 
     public Produto toProduto(ProdutoRequest request) {
         return Produto.builder()
-                .nome(request.getNome())
-                .descricao(request.getDescricao())
-                .marca(request.getMarca())
-                .tipo(request.getTipo())
+                .nome(request.nome())
+                .descricao(request.descricao())
+                .marca(request.marca())
+                .tipo(request.tipo())
+                .quantidadeDisponivel(request.quantidade())
+                .preco(request.preco())
                 .build();
     }
 
@@ -23,7 +27,20 @@ public class ProdutoMapper {
                 produto.getNome(),
                 produto.getDescricao(),
                 produto.getMarca(),
-                produto.getTipo()
+                produto.getTipo(),
+                produto.getQuantidadeDisponivel(),
+                produto.getPreco()
+        );
+    }
+
+    public FechamentoCompraResponse toFechamentoProdutoResponse(Produto produto, double quantidade) {
+        return new FechamentoCompraResponse(
+                produto.getId(),
+                produto.getNome(),
+                produto.getDescricao(),
+                produto.getMarca(),
+                produto.getPreco(),
+                quantidade
         );
     }
 }

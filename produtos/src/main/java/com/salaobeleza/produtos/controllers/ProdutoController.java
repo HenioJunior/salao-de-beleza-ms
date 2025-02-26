@@ -1,5 +1,7 @@
 package com.salaobeleza.produtos.controllers;
 
+import com.salaobeleza.produtos.dtos.FechamentoCompraRequest;
+import com.salaobeleza.produtos.dtos.FechamentoCompraResponse;
 import com.salaobeleza.produtos.dtos.ProdutoRequest;
 import com.salaobeleza.produtos.dtos.ProdutoResponse;
 import com.salaobeleza.produtos.services.ProdutoService;
@@ -22,6 +24,19 @@ public class ProdutoController {
 
     @Autowired
     private ProdutoService service;
+
+    @PostMapping(value="/compra", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Realiza a compra de um novo produto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Compra realizada com sucesso"),
+            @ApiResponse(responseCode = "422", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
+            @ApiResponse(responseCode = "500", description = "Erro ao realizar a compra")
+    })
+    public ResponseEntity<List<FechamentoCompraResponse>> novaCompra(
+            @Valid @RequestBody List<FechamentoCompraRequest> request) {
+        return ResponseEntity.ok(service.compraProdutos(request));
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Realiza o cadastro de um novo produto")

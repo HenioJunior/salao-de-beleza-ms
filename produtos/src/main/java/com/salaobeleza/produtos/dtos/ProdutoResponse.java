@@ -4,13 +4,14 @@ import com.salaobeleza.produtos.enums.TipoProduto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
-@Getter
-public class ProdutoResponse {
+import java.math.BigDecimal;
 
-    private String id;
-    private String nome;
-    private String descricao;
-    private String marca;
-    private TipoProduto tipo;
-}
+public record ProdutoResponse(
+        String id,
+        String nome,
+        String descricao,
+        String marca,
+        TipoProduto tipo,
+        double quantidade,
+        BigDecimal preco
+) { }
