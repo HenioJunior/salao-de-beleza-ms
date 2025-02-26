@@ -2,8 +2,8 @@ package com.salaobeleza.produtos.controllers.handlers;
 
 import com.salaobeleza.produtos.dtos.CustomError;
 import com.salaobeleza.produtos.dtos.ValidationError;
-import com.salaobeleza.produtos.services.exceptions.DatabaseException;
-import com.salaobeleza.produtos.services.exceptions.ResourceNotFoundException;
+import com.salaobeleza.produtos.exceptions.DatabaseException;
+import com.salaobeleza.produtos.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.salaobeleza.produtos.services.exceptions;
+package com.salaobeleza.produtos.exceptions;
 
 public class DatabaseException extends RuntimeException {
 
