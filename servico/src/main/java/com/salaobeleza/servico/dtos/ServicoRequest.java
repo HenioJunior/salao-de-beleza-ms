@@ -1,0 +1,21 @@
+package com.salaobeleza.servico.dtos;
+
+import com.salaobeleza.servico.enums.TipoServico;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Valid
+public class ServicoRequest {
+
+    private String id;
+    @NotNull
+    private double valor;
+    @NotNull
+    private TipoServico tipo;
+}

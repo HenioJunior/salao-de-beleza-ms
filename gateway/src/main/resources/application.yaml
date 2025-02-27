@@ -29,10 +29,10 @@ spring:
             - Path=/servico/** , /servico/v3/api-docs
           filters:
             - StripPrefix=1
-        - id: agendamento
-          uri: lb://agendamento
+        - id: agenda
+          uri: lb://agenda
           predicates:
-            - Path=/agendamento/** , /agendamento/v3/api-docs
+            - Path=/agenda/** , /agenda/v3/api-docs
           filters:
             - StripPrefix=1
         - id: produto
@@ -59,7 +59,7 @@ springdoc:
         name: Profissionais API
       - url: /servico/v3/api-docs
         name: Servicos API
-      - url: /agendamento/v3/api-docs
+      - url: /agenda/v3/api-docs
         name: Agendamentos API
       - url: /produto/v3/api-docs
         name: Produtos API
